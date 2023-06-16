@@ -1,15 +1,16 @@
 package ru.skypro.springdatajpa.exeption;
 
 import ru.skypro.springdatajpa.department.Employee;
+import ru.skypro.springdatajpa.dto.EmployeeDto;
 
 public class EmployeeNotValidExeption extends RuntimeException{
-    private final Employee employee;
+    private final EmployeeDto employee;
 
-    public EmployeeNotValidExeption(Employee employee) {
+    public EmployeeNotValidExeption(EmployeeDto employee) {
         this.employee = employee;
     }
 
-    public Employee getEmployee() {
+    public EmployeeDto getEmployee() {
         return employee;
     }
 }

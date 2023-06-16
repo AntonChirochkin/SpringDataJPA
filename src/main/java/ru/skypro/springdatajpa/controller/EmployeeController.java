@@ -1,7 +1,7 @@
 package ru.skypro.springdatajpa.controller;
 
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.springdatajpa.department.Employee;
+import ru.skypro.springdatajpa.dto.EmployeeDto;
 import ru.skypro.springdatajpa.service.EmployeeService;
 
 import java.util.List;
@@ -20,32 +20,32 @@ public class EmployeeController {
         return employeeService.getSumOfSalaries();
     }
     @GetMapping("/salary/min")
-    public Employee getEmployeeWithMinSalary() {
+    public EmployeeDto getEmployeeWithMinSalary() {
         return employeeService.getEmployeeWithMinSalary();
     }
     @GetMapping("/salary/max")
-    public Employee getEmployeeWithMaxSalary() {
+    public EmployeeDto getEmployeeWithMaxSalary() {
         return employeeService.getEmployeeWithMaxSalary();
     }
 
     @GetMapping("/high-salary")
-    public List<Employee> getEmployeeWithSalaryHigherThanAverage() {
+    public List<EmployeeDto> getEmployeeWithSalaryHigherThanAverage() {
         return employeeService.getEmployeeWithSalaryHigherThanAverage();
     }
 
     // Создание множества новых сотрудников
     @PostMapping
-    public List<Employee> createManyEmployee(@RequestBody List<Employee> employeeList){
+    public List<EmployeeDto> createManyEmployee(@RequestBody List<EmployeeDto> employeeList){
         return employeeService.createManyEmployee(employeeList);
     }
     // Редактирование сотрудника с указанным id;
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody Employee employee){
+    public void update(@PathVariable int id, @RequestBody EmployeeDto employee){
         employeeService.update(id, employee);
     }
     //Возвращение информации о сотруднике с переданным id;
     @GetMapping("/{id}")
-    public Employee get(@PathVariable int id) {
+    public EmployeeDto get(@PathVariable int id) {
         return employeeService.get(id);
     }
     //Удаление сотрудника с переданным id.
@@ -55,7 +55,7 @@ public class EmployeeController {
     }
     //Метод возвращения всех сотрудников, зарплата которых выше переданного параметра salary.
     @GetMapping("/salaryHigherThan")
-    public List<Employee> getFindEmployeeSalaryHigherThan(@RequestParam int salary) {
+    public List<EmployeeDto> getFindEmployeeSalaryHigherThan(@RequestParam int salary) {
         return employeeService.getFindEmployeeSalaryHigherThan(salary);
     }
 }
