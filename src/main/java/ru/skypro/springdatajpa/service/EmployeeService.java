@@ -1,5 +1,6 @@
 package ru.skypro.springdatajpa.service;
 
+
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -35,7 +36,8 @@ public class EmployeeService {
                         new Employee("Олег", 80_000),
                         new Employee("Вика", 165_000),
                         new Employee("Женя", 175_000)
-                ));
+                )
+        );
     }
 
     public int getSumOfSalaries() {

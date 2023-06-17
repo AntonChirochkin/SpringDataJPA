@@ -6,8 +6,8 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import ru.skypro.springdatajpa.department.Employee;
 import ru.skypro.springdatajpa.dto.EmployeeDto;
-import java.util.List;
 
+import java.util.List;
 
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
@@ -17,7 +17,7 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Query("SELECT AVG(e.salary) FROM Employee e")
     double getAverageOfSalaries();
 
-    @Query("SELECT new ru.skypro.springdatajpa.dto.EmployeeDto(e.id, e.name, e.salary) from Employee e WHERE e.salary = (SELECT MIN (e.salary) FROM Employee e)")
+    @Query("SELECT new ru.skypro.springdatajpa.dto.EmployeeDto(e.id, e.name, e.salary) FROM Employee e WHERE e.salary = (SELECT MIN (e.salary) FROM Employee e)")
     Page<EmployeeDto> getEmployeeWithMinSalary(Pageable pageable);
 
     @Query("SELECT new ru.skypro.springdatajpa.dto.EmployeeDto(e.id, e.name, e.salary) from Employee e WHERE e.salary = (SELECT MAX (e.salary) FROM Employee e)")
