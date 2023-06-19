@@ -105,7 +105,7 @@ public class EmployeeService {
     }
 
     public List<EmployeeDto> getFindEmployeeSalaryHigherThan(double salary) {
-        return employeeRepository.findEmployeesBySalaryIsGreaterTher(salary);
+        return employeeRepository.findEmployeesBySalaryIsGreaterThen(salary);
 
     }
 

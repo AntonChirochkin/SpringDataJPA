@@ -4,11 +4,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.stereotype.Repository;
 import ru.skypro.springdatajpa.department.Employee;
 import ru.skypro.springdatajpa.dto.EmployeeDto;
 
 import java.util.List;
-
+@Repository
 public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
     @Query("SELECT SUM(e.salary) FROM Employee e")
@@ -23,6 +24,6 @@ public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
     @Query("SELECT new ru.skypro.springdatajpa.dto.EmployeeDto(e.id, e.name, e.salary) from Employee e WHERE e.salary = (SELECT MAX (e.salary) FROM Employee e)")
     Page<EmployeeDto> getEmployeeWithMaxSalary(Pageable pageable);
 
-
-    List<EmployeeDto> findEmployeesBySalaryIsGreaterTher(double salary);
+    @Query("SELECT new ru.skypro.springdatajpa.dto.EmployeeDto(e.id, e.name, e.salary) from Employee e WHERE e.salary > :salary")
+    List<EmployeeDto> findEmployeesBySalaryIsGreaterThen(double salary);
 }
