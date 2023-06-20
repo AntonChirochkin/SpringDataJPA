@@ -2,7 +2,10 @@ package ru.skypro.springdatajpa.service;
 
 import org.springframework.stereotype.Component;
 import ru.skypro.springdatajpa.department.Employee;
+import ru.skypro.springdatajpa.department.Position;
 import ru.skypro.springdatajpa.dto.EmployeeDto;
+
+import java.util.Optional;
 
 @Component
 public class EmployeeMapper {
@@ -18,7 +21,12 @@ public class EmployeeMapper {
         employeeDto.setId(employee.getId());
         employeeDto.setName(employee.getName());
         employeeDto.setSalary(employee.getSalary());
-        return employeeDto;
 
+        employeeDto.setPosition(
+                Optional.ofNullable(employee.getPosition())
+                .map(Position::getPosition)
+                .orElse(null)
+        );
+        return employeeDto;
     }
 }

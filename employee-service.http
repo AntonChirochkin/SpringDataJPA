@@ -16,25 +16,29 @@ Content-Type: application/json
 
 [
   {
-    "name": "Антон",
-    "salary": 370000
+    "name": "Александр",
+    "salary": 36000
   },
   {
-    "name": "Юлия",
-    "salary": 240000
+    "name": "Ксения",
+    "salary": 24000
+  },
+  {
+    "name": "Анна",
+    "salary": 120000
   }
 ]
 
 ### Получение сотрудника по id;
-GET http://localhost:8080/employee/3
+GET http://localhost:8080/employee/50
 
 ### Редактирование сотрудника с указанным id;
-PUT http://localhost:8080/employee/1
+PUT http://localhost:8080/employee/44
 Content-Type: application/json
 
 {
-  "name": "Женя",
-  "salary": 770000
+  "name": "Ирина",
+  "salary": 990000
 }
 
 
@@ -42,7 +46,13 @@ Content-Type: application/json
 GET http://localhost:8080/employee/{id}
 
 ### Удаление сотрудника с переданным id;
-DELETE http://localhost:8080/employee/3
+DELETE http://localhost:8080/employee/45
 
-### Метод возвращения всех сотрудников, зарплата которых выше переданного параметра salary.
-GET http://localhost:8080/employee/salaryHigherThan?salary=20000
+### Метод возвращения всех сотрудников, зарплата которых выше переданного параметра salary;
+GET http://localhost:8080/employee/salaryHigherThan?salary=20
+
+### Получение сотрудников с самой высокой зарплатой в фирме
+GET http://localhost:8080/employee/withHighestSalary
+
+### Метод принимающий на вход опциональный параметр position и возвращающий информацию о всех сотрудниках фирмы, указанной в параметре должности. Если параметр не указан, то возвращать необходимо всех сотрудников.
+GET http://localhost:8080/employee?position=прогр

@@ -6,6 +6,7 @@ import ru.skypro.springdatajpa.dto.EmployeeDto;
 import ru.skypro.springdatajpa.service.EmployeeService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employee")
@@ -58,5 +59,18 @@ public class EmployeeController {
     @GetMapping("/salaryHigherThan")
     public List<EmployeeDto> getFindEmployeeSalaryHigherThan(@RequestParam int salary) {
         return employeeService.getFindEmployeeSalaryHigherThan(salary);
+    }
+    // Возвращение информации о сотрудниках с самой высокой зарплатой в фирме;
+    @GetMapping("/withHighestSalary")
+    public List<EmployeeDto> getEmployeesWithHighestSalary() {
+        return employeeService.getEmployeesWithHighestSalary();
+    }
+    @GetMapping
+    public List<EmployeeDto> getEmployees(@RequestParam(required = false) String position) {
+        return employeeService.getEmployees(
+                Optional.ofNullable(position)
+                        .filter(pos -> !pos.isEmpty())
+                        .orElse(null)
+        );
     }
 }

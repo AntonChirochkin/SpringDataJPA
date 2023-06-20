@@ -1,6 +1,7 @@
 package ru.skypro.springdatajpa.service;
 
 
+import jakarta.annotation.Nullable;
 import jakarta.annotation.PostConstruct;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -53,11 +54,11 @@ public class EmployeeService {
     }
 
     public EmployeeDto getEmployeeWithMaxSalary() {
-        Page<EmployeeDto> page = employeeRepository.getEmployeeWithMaxSalary(PageRequest.of(0, 1));
-        if (page.isEmpty()) {
+        List<EmployeeDto> employeeWithMaxSalary = getEmployeesWithHighestSalary();
+        if (employeeWithMaxSalary.isEmpty()) {
             return null;
         }
-        return page.getContent().get(0);
+        return employeeWithMaxSalary.get(0);
     }
 
     public List<EmployeeDto> getEmployeeWithSalaryHigherThanAverage() {
@@ -106,7 +107,18 @@ public class EmployeeService {
 
     public List<EmployeeDto> getFindEmployeeSalaryHigherThan(double salary) {
         return employeeRepository.findEmployeesBySalaryIsGreaterThen(salary);
-
     }
 
+    public List<EmployeeDto> getEmployeesWithHighestSalary() {
+        return employeeRepository.getEmployeeWithMaxSalary();
+    }
+
+    public List<EmployeeDto> getEmployees(@Nullable String position) {
+        return Optional.ofNullable(position)
+                .map(employeeRepository::findEmployeesByPosition_PositionContainingIgnoreCase)
+                .orElseGet(employeeRepository::findAll)
+                .stream()
+                .map(employeeMapper::toDto)
+                .collect(Collectors.toList());
+    }
 }
