@@ -1,10 +1,12 @@
 package ru.skypro.springdatajpa.controller;
 
+
 import org.springframework.web.bind.annotation.*;
-import ru.skypro.springdatajpa.department.Employee;
+import ru.skypro.springdatajpa.dto.EmployeeDto;
 import ru.skypro.springdatajpa.service.EmployeeService;
 
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/employee")
@@ -20,32 +22,32 @@ public class EmployeeController {
         return employeeService.getSumOfSalaries();
     }
     @GetMapping("/salary/min")
-    public Employee getEmployeeWithMinSalary() {
+    public EmployeeDto getEmployeeWithMinSalary() {
         return employeeService.getEmployeeWithMinSalary();
     }
     @GetMapping("/salary/max")
-    public Employee getEmployeeWithMaxSalary() {
+    public EmployeeDto getEmployeeWithMaxSalary() {
         return employeeService.getEmployeeWithMaxSalary();
     }
 
     @GetMapping("/high-salary")
-    public List<Employee> getEmployeeWithSalaryHigherThanAverage() {
+    public List<EmployeeDto> getEmployeeWithSalaryHigherThanAverage() {
         return employeeService.getEmployeeWithSalaryHigherThanAverage();
     }
 
     // Создание множества новых сотрудников
     @PostMapping
-    public List<Employee> createManyEmployee(@RequestBody List<Employee> employeeList){
+    public List<EmployeeDto> createManyEmployee(@RequestBody List<EmployeeDto> employeeList){
         return employeeService.createManyEmployee(employeeList);
     }
     // Редактирование сотрудника с указанным id;
     @PutMapping("/{id}")
-    public void update(@PathVariable int id, @RequestBody Employee employee){
+    public void update(@PathVariable int id, @RequestBody EmployeeDto employee){
         employeeService.update(id, employee);
     }
     //Возвращение информации о сотруднике с переданным id;
     @GetMapping("/{id}")
-    public Employee get(@PathVariable int id) {
+    public EmployeeDto get(@PathVariable int id) {
         return employeeService.get(id);
     }
     //Удаление сотрудника с переданным id.
@@ -55,7 +57,32 @@ public class EmployeeController {
     }
     //Метод возвращения всех сотрудников, зарплата которых выше переданного параметра salary.
     @GetMapping("/salaryHigherThan")
-    public List<Employee> getFindEmployeeSalaryHigherThan(@RequestParam int salary) {
+    public List<EmployeeDto> getFindEmployeeSalaryHigherThan(@RequestParam int salary) {
         return employeeService.getFindEmployeeSalaryHigherThan(salary);
+    }
+    // Возвращение информации о сотрудниках с самой высокой зарплатой в фирме;
+    @GetMapping("/withHighestSalary")
+    public List<EmployeeDto> getEmployeesWithHighestSalary() {
+        return employeeService.getEmployeesWithHighestSalary();
+    }
+    @GetMapping
+    public List<EmployeeDto> getEmployees(@RequestParam(required = false) String position) {
+        return employeeService.getEmployees(
+                Optional.ofNullable(position)
+                        .filter(pos -> !pos.isEmpty())
+                        .orElse(null)
+        );
+    }
+    //Метод возвращающий полную информацию о сотруднике (имя, зарплата, название должности) с переданным в пути запроса идентификатором.
+    @GetMapping("/{id}/fullInfo")
+    public EmployeeDto getFullInfo(@PathVariable int id) {
+        return employeeService.getFullInfo(id);
+    }
+    //Метод возвращающий информацию о сотрудниках, основываясь на номере страницы.
+    // Если страница не указана, то возвращается первая страница.
+    // Номера страниц начинаются с 0. Лимит на количество сотрудников на странице — 10 человек.
+    @GetMapping("page")
+    public List<EmployeeDto> getEmployeesFromPage(@RequestParam(required = false, defaultValue = "0") int page) {
+        return employeeService.getEmployeesFromPage(page);
     }
 }

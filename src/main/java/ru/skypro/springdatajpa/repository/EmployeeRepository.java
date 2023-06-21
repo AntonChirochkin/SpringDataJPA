@@ -1,67 +1,41 @@
 package ru.skypro.springdatajpa.repository;
 
-
-import jakarta.annotation.PostConstruct;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import ru.skypro.springdatajpa.department.Employee;
+import ru.skypro.springdatajpa.dto.EmployeeDto;
 
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
-
 @Repository
-public class EmployeeRepository {
-    private final List<Employee> employeeList = new ArrayList<>();
-    @PostConstruct
-    public void init() {
-        employeeList.add(new Employee("Катя", 90_000));
-        employeeList.add(new Employee("Дима", 102_000));
-        employeeList.add(new Employee("Олег", 80_000));
-        employeeList.add(new Employee("Вика", 165_000));
-        employeeList.add(new Employee("Женя", 175_000));
-    }
-    public List<Employee> getAll() {
-        return Collections.unmodifiableList(employeeList);
-    }
+public interface EmployeeRepository extends JpaRepository<Employee, Integer> {
 
-    public Employee add(Employee employee) {
+    @Query("SELECT SUM(e.salary) FROM Employee e")
+    int getSumOfSalaries();
 
-        employeeList.add(employee);
+    @Query("SELECT AVG(e.salary) FROM Employee e")
+    double getAverageOfSalaries();
 
-        return employee;
-    }
+    //ниже приведен пример переноса строк "Текстовые блоки" без использования плюсов как при конкатенации в двух последних
+    @Query("""
+    SELECT new ru.skypro.springdatajpa.dto.EmployeeDto(e.id, e.name, e.salary, e.position.position) 
+    FROM Employee e 
+    WHERE e.salary = (SELECT MIN(e.salary) FROM Employee e)
+    """)
+    Page<EmployeeDto> getEmployeeWithMinSalary(Pageable pageable);
 
+    @Query("""
+    SELECT new ru.skypro.springdatajpa.dto.EmployeeDto(e.id, e.name, e.salary, e.position.position)
+    FROM Employee e 
+    WHERE e.salary = (SELECT MAX(e.salary) FROM Employee e)
+    """)
+    List<EmployeeDto> getEmployeeWithMaxSalary();
 
+    @Query("SELECT new ru.skypro.springdatajpa.dto.EmployeeDto(e.id, e.name, e.salary, p.position) " +
+            "FROM Employee e LEFT JOIN FETCH Position p WHERE e.salary > :salary")
+    List<EmployeeDto> findEmployeesBySalaryIsGreaterThen(double salary);
 
-    public void update(int id, Employee employee) {
-        int indexForUpdating = findIndexById(id);
-        if (indexForUpdating != -1) {
-            employeeList.set(indexForUpdating, employee);
-        }
-    }
-
-    public Optional<Employee> findById(int id) {
-        return employeeList.stream()
-                .filter(employee -> employee.getId() == id)
-                .findFirst();
-    }
-
-    public void delete(int id) {
-        int indexForRemoving = findIndexById(id);
-        if (indexForRemoving != -1) {
-            employeeList.remove(indexForRemoving);
-        }
-    }
-
-    private int findIndexById(int id) {
-        int index = -1;
-        for (int i = 0; i < employeeList.size(); i++) {
-            if (employeeList.get(i).getId() == id) {
-                index = i;
-                break;
-            }
-        }
-        return index;
-    }
+    List<Employee> findEmployeesByPosition_PositionContainingIgnoreCase(String position);
 }
