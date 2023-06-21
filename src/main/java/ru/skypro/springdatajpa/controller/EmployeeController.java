@@ -73,4 +73,16 @@ public class EmployeeController {
                         .orElse(null)
         );
     }
+    //Метод возвращающий полную информацию о сотруднике (имя, зарплата, название должности) с переданным в пути запроса идентификатором.
+    @GetMapping("/{id}/fullInfo")
+    public EmployeeDto getFullInfo(@PathVariable int id) {
+        return employeeService.getFullInfo(id);
+    }
+    //Метод возвращающий информацию о сотрудниках, основываясь на номере страницы.
+    // Если страница не указана, то возвращается первая страница.
+    // Номера страниц начинаются с 0. Лимит на количество сотрудников на странице — 10 человек.
+    @GetMapping("page")
+    public List<EmployeeDto> getEmployeesFromPage(@RequestParam(required = false, defaultValue = "0") int page) {
+        return employeeService.getEmployeesFromPage(page);
+    }
 }

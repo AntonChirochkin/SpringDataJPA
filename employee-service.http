@@ -30,7 +30,7 @@ Content-Type: application/json
 ]
 
 ### Получение сотрудника по id;
-GET http://localhost:8080/employee/50
+GET http://localhost:8080/employee/154
 
 ### Редактирование сотрудника с указанным id;
 PUT http://localhost:8080/employee/44
@@ -55,4 +55,11 @@ GET http://localhost:8080/employee/salaryHigherThan?salary=20
 GET http://localhost:8080/employee/withHighestSalary
 
 ### Метод принимающий на вход опциональный параметр position и возвращающий информацию о всех сотрудниках фирмы, указанной в параметре должности. Если параметр не указан, то возвращать необходимо всех сотрудников.
-GET http://localhost:8080/employee?position=прогр
+GET http://localhost:8080/employee?position=инженер
+
+### Метод возвращающий полную информацию о сотруднике (имя, зарплата, название должности) с переданным в пути запроса идентификатором.
+GET http://localhost:8080/employee/page
+### Если указать page, то вернется только 10 записей, если page?page=1 вернет оставшиеся записи, если укажем страницу два то вернется пустой список, потомучто на странице два никого нет, страница ноль это тоже самое что ничего не указано.
+
+
+

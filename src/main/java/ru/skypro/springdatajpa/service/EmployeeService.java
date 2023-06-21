@@ -96,6 +96,10 @@ public class EmployeeService {
     public EmployeeDto get(int id) {
         return employeeRepository.findById(id)
                 .map(employeeMapper::toDto)
+                .map(employeeDto -> {
+                    employeeDto.setPosition(null);
+                    return employeeDto;
+                })
                 .orElseThrow(() -> new EmployeeNotFoundExeption(id));
     }
 
@@ -118,6 +122,18 @@ public class EmployeeService {
                 .map(employeeRepository::findEmployeesByPosition_PositionContainingIgnoreCase)
                 .orElseGet(employeeRepository::findAll)
                 .stream()
+                .map(employeeMapper::toDto)
+                .collect(Collectors.toList());
+    }
+
+    public EmployeeDto getFullInfo(int id) {
+        return employeeRepository.findById(id)
+                .map(employeeMapper::toDto)
+                .orElseThrow(() -> new EmployeeNotFoundExeption(id));
+    }
+
+    public List<EmployeeDto> getEmployeesFromPage(int page) {
+        return employeeRepository.findAll(PageRequest.of(page, 10)).stream()
                 .map(employeeMapper::toDto)
                 .collect(Collectors.toList());
     }
